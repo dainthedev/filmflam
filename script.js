@@ -20,7 +20,9 @@ function displayInitialResults(results){
         .append("<h2 class='remove'>Theses are the titles that matched your search.</h2>");
     for(let i = 0; i < results.results.length; i++){  
         $("#results")
-            .append(`<p class='remove'><a data-id="${results.results[i].id}" class="result-link" href="#">${results.results[i].title}</a></p>`)
+            .append(`<p class='remove'>
+                <a data-id="${results.results[i].id}" class="result-link" href="#">
+                    ${results.results[i].title}</a></p>`);
             console.log(results.results[i].id);
     }
 }
@@ -28,7 +30,7 @@ function displayInitialResults(results){
 function initialResults(movieTitle){
     console.log("initial results");   
     const tmdbKey = "e306284dee83c46d017fd5f454816f12";
-    const tmdbBaseUrl = "https://api.themoviedb.org/3/search/movie";
+    const tmdbBaseUrl = "https://api.themoviedb.org/3/search/movie/";
     const parameters = {
         api_key: tmdbKey,
         query: movieTitle
@@ -50,6 +52,14 @@ function initialResults(movieTitle){
         .then(results => displayInitialResults(results))
 }
 
+function displayFinalResults(results){
+    console.log(results);
+    $("#results").append(`<h3>${results.title}</h3>
+        <p>${results.overview}</p>
+        <p>${results.genres[0].name}</p>
+        <p>${results.release_date}</p>`);
+}
+
 function main(){
     $("form").submit(function (event){
         event.preventDefault();
@@ -62,24 +72,22 @@ function main(){
     $("#results").on("click", ".result-link", function(event){
         event.preventDefault();
         const tmdbKey = "e306284dee83c46d017fd5f454816f12";
-        const tmdbBaseUrl = "https://api.themoviedb.org/3/search/movie/";
+        const tmdbBaseUrl = "https://api.themoviedb.org/3/movie/";
         console.log("click link");
         $(".remove").empty();
         let selectionId = $(this).data("id");
         console.log(selectionId);
-        let movieDetailsUrl = tmdbBaseUrl + selectionId + "?" + tmdbKey;
+        let movieDetailsUrl = tmdbBaseUrl + selectionId + "?" + "api_key=" + tmdbKey;
         console.log(movieDetailsUrl);
         fetch(movieDetailsUrl)
             .then(response => {
                 if(response.ok){
                     return response.json();
                 }
-                throw new Error(response.statuseText);
+                throw new Error(response.statusText);
             })
-            .then()
+            .then(results => displayFinalResults(results))
     })
 }
-
-
 
 $(main);
