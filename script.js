@@ -11,20 +11,32 @@ function formatParameters(parameters){
     const queryItems = Object.keys(parameters)
         .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(parameters[key])}`);
         console.log(queryItems);
+        return queryItems.join("&");
 }
 
 function initialResults(movieTitle){
     console.log("initial results");   
     const tmdbKey = "e306284dee83c46d017fd5f454816f12"
-    const tmdbBaseUrl = "https://api.themoviedb.org"
+    const tmdbBaseUrl = "https://api.themoviedb.org/3/search/movie"
     const parameters = {
         api_key: tmdbKey,
         query: movieTitle
-    }
+    };
 
     console.log(parameters);
     const queryString = formatParameters(parameters);
+    console.log(queryString);
     const finalUrl = tmdbBaseUrl + "?" + queryString;
+    console.log(finalUrl);
+
+    fetch(finalUrl)
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            }
+            throw new Error(response.statusText);
+        })
+        .then(results => displayInitialResults(results.results))
 }
 
 function getMovie(){
