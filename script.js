@@ -14,10 +14,21 @@ function formatParameters(parameters){
         return queryItems.join("&");
 }
 
+function displayInitialResults(results){
+    console.log(results);
+    $("#results").empty()
+        .append("<h2 class='remove'>Theses are the titles that matched your search.</h2>");
+    for(let i = 0; i < results.results.length; i++){  
+        $("#results")
+            .append(`<p class='remove'><a data-id="${results.results[i].id}" class="result-link" href="#">${results.results[i].title}</a></p>`)
+            console.log(results.results[i].id);
+    }
+}
+
 function initialResults(movieTitle){
     console.log("initial results");   
-    const tmdbKey = "e306284dee83c46d017fd5f454816f12"
-    const tmdbBaseUrl = "https://api.themoviedb.org/3/search/movie"
+    const tmdbKey = "e306284dee83c46d017fd5f454816f12";
+    const tmdbBaseUrl = "https://api.themoviedb.org/3/search/movie";
     const parameters = {
         api_key: tmdbKey,
         query: movieTitle
@@ -36,10 +47,10 @@ function initialResults(movieTitle){
             }
             throw new Error(response.statusText);
         })
-        .then(results => displayInitialResults(results.results))
+        .then(results => displayInitialResults(results))
 }
 
-function getMovie(){
+function main(){
     $("form").submit(function (event){
         event.preventDefault();
         console.log("getMovie");       
@@ -47,6 +58,28 @@ function getMovie(){
         console.log(movieTitle);
         initialResults(movieTitle);
     });
+
+    $("#results").on("click", ".result-link", function(event){
+        event.preventDefault();
+        const tmdbKey = "e306284dee83c46d017fd5f454816f12";
+        const tmdbBaseUrl = "https://api.themoviedb.org/3/search/movie/";
+        console.log("click link");
+        $(".remove").empty();
+        let selectionId = $(this).data("id");
+        console.log(selectionId);
+        let movieDetailsUrl = tmdbBaseUrl + selectionId + "?" + tmdbKey;
+        console.log(movieDetailsUrl);
+        fetch(movieDetailsUrl)
+            .then(response => {
+                if(response.ok){
+                    return response.json();
+                }
+                throw new Error(response.statuseText);
+            })
+            .then()
+    })
 }
 
-$(getMovie);
+
+
+$(main);
