@@ -4,7 +4,7 @@
 //tmdbBaseUrl = https://api.themoviedb.org
 
 //const tasteKey = "378860-FilmFlam-JQEPAYXT"
-//tasteBaseUrl = "https://tastedive.com/api"
+//tasteBaseUrl = "https://tastedive.com/api/"
 
 function formatParameters(parameters){
     console.log("format parameters")
@@ -22,7 +22,7 @@ function displayInitialResults(results){
         $("#results")
             .append(`<p class='remove'>
                 <a data-id="${results.results[i].id}" class="result-link" href="#">
-                    ${results.results[i].title}</a></p>`);
+                    ${results.results[i].title}</a> ${results.results[i].release_date}</p>`);
             console.log(results.results[i].id);
     }
 }
@@ -87,6 +87,18 @@ function main(){
                 throw new Error(response.statusText);
             })
             .then(results => displayFinalResults(results))
+
+            let recommendationsUrl = "https://tastedive.com/api/similar?k=378860-FilmFlam-JQEPAYXT&type=movie&info=1&q=the+philadelphia+story&callback";
+            console.log(recommendationsUrl);
+            fetchJsonp(recommendationsUrl)
+            .then(results => {
+                console.log("secondary fetch")
+                if(results.ok){
+                    return results.json()
+                }
+                console.log(results);
+            })
+            .then(data  => console.log(data))
     })
 }
 
