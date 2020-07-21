@@ -29,7 +29,7 @@ function displayInitialResults(results){
 
 function displayFinalResults(results){
     console.log(results);
-    $("#results").append(`<h3>${results.title}</h3>
+    $("#results").append(`<h2>${results.title}</h2>
         <p>${results.overview}</p>
         <p>${results.genres[0].name}</p>
         <p>${results.release_date}</p>`);
@@ -64,15 +64,15 @@ function finalResults(selectionId){
     console.log("final Results");
     const tmdbKey = "e306284dee83c46d017fd5f454816f12";
     const tmdbBaseUrl = `https://api.themoviedb.org/3/movie/${selectionId}`;
-    /*const parameters = {
-        query: selectionId,
+    const parameters = {
+        //query: selectionId,
         api_key: tmdbKey
     };
     console.log(parameters);
     const queryString = formatParameters(parameters);
     console.log(queryString);
-    const movieDetailsUrl = tmdbBaseUrl + "?" + queryString;*/
-    const movieDetailsUrl = tmdbBaseUrl + "?" + "api_key=" + tmdbKey;
+    const movieDetailsUrl = tmdbBaseUrl + "?" + queryString;
+    //const movieDetailsUrl = tmdbBaseUrl + "?" + "api_key=" + tmdbKey;
     console.log(movieDetailsUrl);
 
     fetch(movieDetailsUrl)
@@ -128,9 +128,8 @@ function displayRecommendations(data){
     for(let i = 1; i < data.Similar.Results.length; i++){
     $("#results").append(`<p>${data.Similar.Results[i].Name}</p>
         <p>${data.Similar.Results[i].wTeaser}</p>
-        <p>${data.Similar.Results[i].yUrl}</p>`);
+        <p><a href="${data.Similar.Results[i].yUrl}" target="_blank">${data.Similar.Results[i].yUrl}</a></p>`);
     }
-
 }
 
 function main(){
