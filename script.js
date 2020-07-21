@@ -4,7 +4,7 @@
 //tmdbBaseUrl = https://api.themoviedb.org
 
 //const tasteKey = "378860-FilmFlam-JQEPAYXT"
-//tasteBaseUrl = "https://tastedive.com/api/"
+//tasteBaseUrl = "https://tastedive.com/api/similar"
 
 function formatParameters(parameters){
     console.log("format parameters")
@@ -27,6 +27,14 @@ function displayInitialResults(results){
     }
 }
 
+function displayFinalResults(results){
+    console.log(results);
+    $("#results").append(`<h3>${results.title}</h3>
+        <p>${results.overview}</p>
+        <p>${results.genres[0].name}</p>
+        <p>${results.release_date}</p>`);
+}
+
 function initialResults(movieTitle){
     console.log("initial results");   
     const tmdbKey = "e306284dee83c46d017fd5f454816f12";
@@ -39,10 +47,10 @@ function initialResults(movieTitle){
     console.log(parameters);
     const queryString = formatParameters(parameters);
     console.log(queryString);
-    const finalUrl = tmdbBaseUrl + "?" + queryString;
-    console.log(finalUrl);
+    const initialResultsUrl = tmdbBaseUrl + "?" + queryString;
+    console.log(initialResultsUrl);
 
-    fetch(finalUrl)
+    fetch(initialResultsUrl)
         .then(response => {
             if(response.ok){
                 return response.json();
@@ -52,12 +60,77 @@ function initialResults(movieTitle){
         .then(results => displayInitialResults(results))
 }
 
-function displayFinalResults(results){
-    console.log(results);
-    $("#results").append(`<h3>${results.title}</h3>
-        <p>${results.overview}</p>
-        <p>${results.genres[0].name}</p>
-        <p>${results.release_date}</p>`);
+function finalResults(selectionId){
+    console.log("final Results");
+    const tmdbKey = "e306284dee83c46d017fd5f454816f12";
+    const tmdbBaseUrl = `https://api.themoviedb.org/3/movie/${selectionId}`;
+    /*const parameters = {
+        query: selectionId,
+        api_key: tmdbKey
+    };
+    console.log(parameters);
+    const queryString = formatParameters(parameters);
+    console.log(queryString);
+    const movieDetailsUrl = tmdbBaseUrl + "?" + queryString;*/
+    const movieDetailsUrl = tmdbBaseUrl + "?" + "api_key=" + tmdbKey;
+    console.log(movieDetailsUrl);
+
+    fetch(movieDetailsUrl)
+    .then(response => {
+        if(response.ok){
+            return response.json();
+        }
+        throw new Error(response.statusText);
+    })
+    .then(results => displayFinalResults(results))
+}
+
+function recommendations(selectionTitle){
+    console.log(selectionTitle)
+    const tasteBaseUrl = "https://tastedive.com/api/similar"
+    const tasteKey = "378860-FilmFlam-JQEPAYXT"
+    const parameters = {
+        k: tasteKey,
+        type: "movie",
+        info: "1",
+        q: selectionTitle[0].innerText
+    };
+
+    console.log(parameters);
+    const queryString = formatParameters(parameters);
+    console.log(queryString);
+    const recommendationsUrl = tasteBaseUrl + "?" + queryString;
+    console.log(recommendationsUrl);
+    //let recommendationsUrl = "https://tastedive.com/api/similar?k=378860-FilmFlam-JQEPAYXT&type=movie&info=1&q=Back+to+the+Future";
+    //console.log(recommendationsUrl);
+    fetchJsonp(recommendationsUrl)
+    .then(results => {
+        console.log("secondary fetch")
+        if(results.ok){
+            return results.json()
+        }
+        console.log(results);
+    })
+    .then(data  => displayRecommendations(data))
+}
+
+// function displayFinalResults(results){
+//     console.log(results);
+//     $("#results").append(`<h3>${results.title}</h3>
+//         <p>${results.overview}</p>
+//         <p>${results.genres[0].name}</p>
+//         <p>${results.release_date}</p>`);
+// }
+
+function displayRecommendations(data){
+    console.log(data);
+    $("#results").append("<h3>You may also like the following:</h3>")
+    for(let i = 1; i < data.Similar.Results.length; i++){
+    $("#results").append(`<p>${data.Similar.Results[i].Name}</p>
+        <p>${data.Similar.Results[i].wTeaser}</p>
+        <p>${data.Similar.Results[i].yUrl}</p>`);
+    }
+
 }
 
 function main(){
@@ -71,34 +144,40 @@ function main(){
 
     $("#results").on("click", ".result-link", function(event){
         event.preventDefault();
-        const tmdbKey = "e306284dee83c46d017fd5f454816f12";
-        const tmdbBaseUrl = "https://api.themoviedb.org/3/movie/";
+        //const tmdbKey = "e306284dee83c46d017fd5f454816f12";
+        //const tmdbBaseUrl = "https://api.themoviedb.org/3/movie/";
         console.log("click link");
         $(".remove").empty();
+        let selectionTitle = $(this).val("title");
+        //console.log(selection);
         let selectionId = $(this).data("id");
         console.log(selectionId);
-        let movieDetailsUrl = tmdbBaseUrl + selectionId + "?" + "api_key=" + tmdbKey;
-        console.log(movieDetailsUrl);
-        fetch(movieDetailsUrl)
-            .then(response => {
-                if(response.ok){
-                    return response.json();
-                }
-                throw new Error(response.statusText);
-            })
-            .then(results => displayFinalResults(results))
+        finalResults(selectionId);
+        recommendations(selectionTitle);
 
-            let recommendationsUrl = "https://tastedive.com/api/similar?k=378860-FilmFlam-JQEPAYXT&type=movie&info=1&q=the+philadelphia+story&callback";
-            console.log(recommendationsUrl);
-            fetchJsonp(recommendationsUrl)
-            .then(results => {
-                console.log("secondary fetch")
-                if(results.ok){
-                    return results.json()
-                }
-                console.log(results);
-            })
-            .then(data  => console.log(data))
+        //let movieDetailsUrl = tmdbBaseUrl + selectionId + "?" + "api_key=" + tmdbKey;
+        //console.log(movieDetailsUrl);
+        // fetch(movieDetailsUrl)
+        //     .then(response => {
+        //         if(response.ok){
+        //             return response.json();
+        //         }
+        //         throw new Error(response.statusText);
+        //     })
+        //     .then(results => displayFinalResults(results))
+
+            // let tasteBaseUrl= "https://tastedive.com/api/similar"
+            // let recommendationsUrl = "https://tastedive.com/api/similar?k=378860-FilmFlam-JQEPAYXT&type=movie&info=1&q=Back+to+the+Future";
+            // console.log(recommendationsUrl);
+            // fetchJsonp(recommendationsUrl)
+            // .then(results => {
+            //     console.log("secondary fetch")
+            //     if(results.ok){
+            //         return results.json()
+            //     }
+            //     console.log(results);
+            // })
+            // .then(data  => displayRecommendations(data))
     })
 }
 
