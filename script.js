@@ -126,9 +126,9 @@ function displayRecommendations(data){
     console.log(data);
     $("#results").append("<h3>You may also like the following:</h3>")
     for(let i = 1; i < data.Similar.Results.length; i++){
-    $("#results").append(`<p>${data.Similar.Results[i].Name}</p>
+    $("#results").append(`<h4>${data.Similar.Results[i].Name}</h4>
         <p>${data.Similar.Results[i].wTeaser}</p>
-        <p><a href="${data.Similar.Results[i].yUrl}" target="_blank">${data.Similar.Results[i].yUrl}</a></p>`);
+        <p><a href="${data.Similar.Results[i].yUrl}" target="_blank">View Trailer</a></p>`);
     }
 }
 
