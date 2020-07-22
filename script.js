@@ -38,7 +38,7 @@ function displayFinalResults(results){
 function initialResults(movieTitle){
     console.log("initial results");   
     const tmdbKey = "e306284dee83c46d017fd5f454816f12";
-    const tmdbBaseUrl = "https://api.themoviedb.org/3/search/movie/";
+    const tmdbBaseUrl = "https://api.themoviedb.org/3/search/movie";
     const parameters = {
         api_key: tmdbKey,
         query: movieTitle
