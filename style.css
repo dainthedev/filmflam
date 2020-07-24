@@ -47,6 +47,10 @@ form{
     margin: auto
 }
 
+a:link{
+    color: white;
+}
+
 h2,h3,h4,p{
     font-family: 'Cantarell', sans-serif;
 }
