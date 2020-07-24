@@ -2,24 +2,26 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="A movie search and discovery app">
         <title>Filmflam</title>
         <link href="style.css" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <div class="container">
-            <img id="banner" src="img/banner.png" style="width:100%;">
-                <div class="top-left"><h1>fILMfLAM<span id="less">.COM</span></h1></div>
-        </div>
-        <form>
-            <label for="movieTitle">Type in the name of a movie that you like.</label>
-            <input id="movieTitle" name="movieTitle" value="casablanca" required>
-            <p><input type="submit" value="Action!"></p>
-        </form>
-        <div class="error" id="results"></div>
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <script src="fetch-jsonp.js"></script>
-        <script src="script.js"></script>
+        <main>
+            <div class="container">
+                <img id="banner" src="img/banner.png" style="width:100%;">
+                    <div class="top-left"><h1>fILMfLAM<span id="less">.COM</span></h1></div>
+            </div>
+            <form>
+                <label for="movieTitle">Type in the name of a movie that you like.</label>
+                <input id="movieTitle" name="movieTitle" value="casablanca" required>
+                <p><input type="submit" value="Action!"></p>
+            </form>
+            <div class="error" id="results"></div>
+            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+            <script src="fetch-jsonp.js"></script>
+            <script src="script.js"></script>
+        </main>
     </body>
 </html>

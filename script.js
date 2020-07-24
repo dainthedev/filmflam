@@ -17,10 +17,10 @@ function formatParameters(parameters){
 function displayInitialResults(results){
     console.log(results);
     $("#results").empty()
-        .append("<h2 class='remove'>Theses are the titles that matched your search.</h2>");
+        .append("<h2 class='remove'>These are the titles that matched your search.</h2>");
     for(let i = 0; i < results.results.length; i++){  
         $("#results")
-            .append(`<p class='remove'>
+            .append(`<p class='remove bottom-space'>
                 <a data-id="${results.results[i].id}" class="result-link" href="#">
                     ${results.results[i].title}</a> ${results.results[i].release_date}</p>`);
             console.log(results.results[i].id);
@@ -93,7 +93,8 @@ function recommendations(selectionTitle){
         k: tasteKey,
         type: "movie",
         info: "1",
-        q: selectionTitle[0].innerText
+        q: selectionTitle,
+        limit: 10
     };
 
     console.log(parameters);
@@ -127,8 +128,10 @@ function displayRecommendations(data){
     $("#results").append("<h3>You may also like the following:</h3>")
     for(let i = 1; i < data.Similar.Results.length; i++){
     $("#results").append(`<h4>${data.Similar.Results[i].Name}</h4>
-        <p>${data.Similar.Results[i].wTeaser}</p>
-        <p><a href="${data.Similar.Results[i].yUrl}" target="_blank">View Trailer</a></p>`);
+        <div class="group">
+            <p class="item">${data.Similar.Results[i].wTeaser}</p>
+            <iframe class="item-double" width="300px" height="300px" src="${data.Similar.Results[i].yUrl}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>`);
     }
 }
 
@@ -147,8 +150,8 @@ function main(){
         //const tmdbBaseUrl = "https://api.themoviedb.org/3/movie/";
         console.log("click link");
         $(".remove").empty();
-        let selectionTitle = $(this).val("title");
-        //console.log(selection);
+        let selectionTitle = $(event.target).html().trim();
+        console.log("Title",selectionTitle);
         let selectionId = $(this).data("id");
         console.log(selectionId);
         finalResults(selectionId);
